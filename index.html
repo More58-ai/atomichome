@@ -31,18 +31,18 @@
       align-items: center;
       justify-content: center;
       text-shadow: 2px 2px 10px #000;
+      gap: 15px;
     }
 
     header h1 {
       font-size: 3rem;
       color: #fff;
-      margin-bottom: 20px;
+      margin-bottom: 10px;
     }
 
     .btn {
-      display: inline-block;
-      padding: 15px 30px;
-      font-size: 1.2rem;
+      padding: 12px 24px;
+      font-size: 1.1rem;
       color: #fff;
       background: linear-gradient(270deg, #ff006a, #ffcc00, #00ffcc, #0066ff);
       background-size: 800% 800%;
@@ -89,7 +89,6 @@
       font-size: 0.9rem;
     }
 
-    /* --- Modal Styles --- */
     .modal {
       display: none;
       position: fixed;
@@ -153,9 +152,24 @@
       to {opacity: 1;}
     }
 
+    .news-container {
+      max-height: 250px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+    }
+    .news-item {
+      display: none;
+      font-size: 1.2rem;
+      color: #c9d1d9;
+      transition: opacity 0.3s;
+    }
+    .news-item.active { display: block; opacity: 1; }
+
     @media (max-width: 768px) {
       header h1 { font-size: 2rem; text-align: center; }
-      .btn { font-size: 1rem; padding: 12px 24px; }
+      .btn { font-size: 1rem; padding: 10px 20px; }
       .content h2 { font-size: 1.5rem; }
       .content p { font-size: 1rem; }
     }
@@ -166,6 +180,8 @@
   <header>
     <h1>Добро пожаловать в VVIXXI House</h1>
     <button class="btn" id="openModal">Подать анкету</button>
+    <button class="btn" id="openNews">Новости</button>
+    <a href="https://more58-ai.github.io/vvixxi-house/video.html" class="btn">Видео</a>
   </header>
 
   <section class="content">
@@ -184,7 +200,7 @@
     © 2025 VVIXXI. Все права нихуя не защищены.
   </footer>
 
-  <!-- Modal -->
+  <!-- Modal Анкета -->
   <div class="modal" id="myModal">
     <div class="modal-content">
       <span class="close" id="closeModal">&times;</span>
@@ -200,23 +216,55 @@
     </div>
   </div>
 
+  <!-- Modal Новости -->
+  <div class="modal" id="newsModal">
+    <div class="modal-content">
+      <span class="close" id="closeNews">&times;</span>
+      <h2>Новости VVIXXI</h2>
+      <div class="news-container" id="newsBox">
+        <div class="news-item active">🔥 Сегодня стартует новый ивент «Охота за сокровищами»!</div>
+        <div class="news-item">🎉 Добро пожаловать новым участникам! Мы уже 40+ человек!</div>
+      </div>
+      <p style="font-size:0.9rem;color:#999;margin-top:10px;">(Листай новости колесиком 🖱)</p>
+    </div>
+  </div>
+
   <script>
+    // Анкета
     const modal = document.getElementById("myModal");
-    const openBtn = document.getElementById("openModal");
-    const closeBtn = document.getElementById("closeModal");
-    const formBtn = document.getElementById("formBtn");
+    document.getElementById("openModal").onclick = () => modal.style.display = "flex";
+    document.getElementById("closeModal").onclick = () => modal.style.display = "none";
 
-    openBtn.onclick = () => modal.style.display = "flex";
-    closeBtn.onclick = () => modal.style.display = "none";
-    window.onclick = (e) => { if (e.target == modal) modal.style.display = "none"; }
+    // Новости
+    const newsModal = document.getElementById("newsModal");
+    const newsItems = document.querySelectorAll(".news-item");
+    let newsIndex = 0;
+    document.getElementById("openNews").onclick = () => newsModal.style.display = "flex";
+    document.getElementById("closeNews").onclick = () => newsModal.style.display = "none";
 
-    // плавний перехід на Google Form
-    formBtn.addEventListener("click", function(e) {
+    function showNews(index) {
+      newsItems.forEach((item, i) => {
+        item.classList.toggle("active", i === index);
+      });
+    }
+
+    document.getElementById("newsBox").addEventListener("wheel", (e) => {
+      newsIndex = e.deltaY > 0
+        ? (newsIndex + 1) % newsItems.length
+        : (newsIndex - 1 + newsItems.length) % newsItems.length;
+      showNews(newsIndex);
+    });
+
+    window.onclick = (e) => {
+      if (e.target == modal) modal.style.display = "none";
+      if (e.target == newsModal) newsModal.style.display = "none";
+    };
+
+    // Переход на Google Form с эффектом
+    document.getElementById("formBtn").addEventListener("click", function(e) {
       e.preventDefault();
       document.body.classList.add("fade-out");
-      setTimeout(() => {
-        window.location.href = formBtn.href;
-      }, 600);
+      setTimeout(() => window.location.href = this.href, 600);
     });
   </script>
 
