@@ -3,60 +3,75 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="VVIXXI — это комьюнити с постоянным онлайном 40+ игроков, ивентами, конкурсами и крутой атмосферой. Присоединяйся!">
-  <meta name="keywords" content="Roblox, VVIXXI, РП, roleplay, роблокс сервер, роблокс дом">
-  <meta name="author" content="VVIXXI">
-  <title>VVIXXI</title>
+  <title>Atomic</title>
   <link href="https://fonts.googleapis.com/css2?family=Russo+One&display=swap" rel="stylesheet">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
       font-family: 'Russo One', sans-serif;
-      background-color: #0d1117;
-      color: #ffffff;
+      background: radial-gradient(circle at top, #0d1117, #05070a);
+      color: #fff;
       line-height: 1.6;
-      opacity: 1;
       transition: opacity 0.6s ease;
     }
     body.fade-out { opacity: 0; }
 
     header {
-      background-image: url('https://i.postimg.cc/MZ0pdBcD/image.jpg');
-      background-size: cover;
-      background-position: center;
-      height: 300px;
+      position: relative;
+      height: 300px; /* как было */
+      background: url('https://i.postimg.cc/t42ng24N/image.jpg') center/cover no-repeat;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      text-shadow: 2px 2px 10px #000;
-      gap: 15px;
+      text-align: center;
+      overflow: hidden;
     }
-
+    header::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.55);
+      backdrop-filter: blur(3px);
+    }
     header h1 {
+      position: relative;
       font-size: 3rem;
       color: #fff;
-      margin-bottom: 10px;
+      text-shadow: 0 0 10px #a855f7, 0 0 20px #a855f7, 0 0 40px #9333ea;
+      animation: glowPulse 3s ease-in-out infinite;
+      z-index: 2;
+    }
+    @keyframes glowPulse {
+      0%, 100% {
+        text-shadow: 0 0 10px #a855f7, 0 0 20px #a855f7, 0 0 40px #9333ea;
+      }
+      50% {
+        text-shadow: 0 0 20px #d8b4fe, 0 0 40px #a855f7, 0 0 60px #9333ea;
+      }
     }
 
     .btn {
-      padding: 12px 24px;
+      margin-top: 15px;
+      padding: 12px 26px;
       font-size: 1.1rem;
       color: #fff;
       background: linear-gradient(270deg, #ff006a, #ffcc00, #00ffcc, #0066ff);
-      background-size: 800% 800%;
+      background-size: 600% 600%;
       border: none;
       border-radius: 12px;
       cursor: pointer;
       text-decoration: none;
       animation: gradientShift 6s ease infinite;
-      box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+      box-shadow: 0 0 20px rgba(88,166,255,0.5);
       transition: transform 0.25s, box-shadow 0.25s;
+      z-index: 2;
     }
     .btn:hover {
-      transform: scale(1.08);
-      box-shadow: 0 0 25px rgba(255,255,255,0.7);
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: 0 0 25px rgba(255,255,255,0.9), 0 0 45px rgba(88,166,255,0.7);
     }
 
     @keyframes gradientShift {
@@ -65,99 +80,94 @@
       100% { background-position: 0% 50%; }
     }
 
-    .content {
-      padding: 40px 20px;
+    section.content {
       max-width: 1000px;
       margin: 0 auto;
+      padding: 40px 20px;
+      text-align: center;
     }
-    .content h2 {
+    section.content h2 {
       font-size: 2rem;
-      margin-bottom: 20px;
       color: #58a6ff;
+      margin-bottom: 20px;
     }
-    .content p {
+    section.content p {
       font-size: 1.2rem;
       color: #c9d1d9;
     }
 
     footer {
-      background-color: #161b22;
-      color: #8b949e;
+      background: #0c0f14;
       text-align: center;
-      padding: 20px;
-      margin-top: 40px;
-      font-size: 0.9rem;
+      padding: 25px;
+      font-size: 0.95rem;
+      color: #8b949e;
+      border-top: 1px solid rgba(255,255,255,0.15);
+      box-shadow: 0 -2px 20px rgba(0,0,0,0.7);
     }
 
+    /* Модалки */
     .modal {
       display: none;
       position: fixed;
-      z-index: 999;
-      left: 0; top: 0;
-      width: 100%; height: 100%;
-      background: rgba(0,0,0,0.8);
-      backdrop-filter: blur(8px);
+      inset: 0;
+      background: rgba(0,0,0,0.85);
+      backdrop-filter: blur(10px);
       justify-content: center;
       align-items: center;
-      animation: fadeInBg 0.4s ease;
+      z-index: 999;
     }
-
     .modal-content {
-      background: rgba(22, 27, 34, 0.95);
-      border-radius: 18px;
-      padding: 35px;
-      max-width: 550px;
+      background: #161b22;
+      border-radius: 20px;
+      padding: 40px;
+      max-width: 600px;
       width: 90%;
       text-align: center;
       color: #fff;
-      box-shadow: 0 0 40px rgba(0,0,0,0.6);
-      animation: fadeIn 0.4s ease;
+      box-shadow: 0 0 40px rgba(88,166,255,0.5);
+      transform: scale(0.9);
+      opacity: 0;
+      animation: popUp 0.4s forwards;
       position: relative;
     }
-
     .modal-content img {
       width: 120px;
       border-radius: 50%;
       margin-bottom: 20px;
-      box-shadow: 0 0 20px rgba(88,166,255,0.6);
+      box-shadow: 0 0 25px rgba(88,166,255,0.7);
     }
-
     .modal-content h2 {
-      color: #58a6ff;
       margin-bottom: 15px;
-      font-size: 1.8rem;
+      font-size: 2rem;
+      color: #58a6ff;
     }
-
     .modal-content p {
-      font-size: 1.1rem;
       margin-bottom: 25px;
+      font-size: 1.1rem;
       color: #c9d1d9;
-      line-height: 1.5;
     }
-
     .close {
       position: absolute;
-      top: 20px; right: 30px;
+      top: 20px;
+      right: 25px;
       font-size: 2rem;
       color: #fff;
       cursor: pointer;
+      transition: 0.2s;
     }
+    .close:hover { color: #58a6ff; }
 
-    @keyframes fadeIn {
-      from {opacity: 0; transform: translateY(30px);}
-      to {opacity: 1; transform: translateY(0);}
-    }
-    @keyframes fadeInBg {
-      from {opacity: 0;}
-      to {opacity: 1;}
+    @keyframes popUp {
+      to { transform: scale(1); opacity: 1; }
     }
 
     .news-container {
-      max-height: 250px;
+      max-height: 220px;
+      overflow: hidden;
       display: flex;
       justify-content: center;
       align-items: center;
-      overflow: hidden;
     }
     .news-item {
       display: none;
@@ -168,28 +178,26 @@
     .news-item.active { display: block; opacity: 1; }
 
     @media (max-width: 768px) {
-      header h1 { font-size: 2rem; text-align: center; }
-      .btn { font-size: 1rem; padding: 10px 20px; }
-      .content h2 { font-size: 1.5rem; }
-      .content p { font-size: 1rem; }
+      header h1 { font-size: 2rem; }
+      .btn { font-size: 1rem; padding: 10px 18px; }
+      section.content h2 { font-size: 1.5rem; }
+      section.content p { font-size: 1rem; }
     }
   </style>
 </head>
 <body>
 
   <header>
-    <h1>Добро пожаловать в VVIXXI House</h1>
+    <h1>Atomic House</h1>
     <button class="btn" id="openModal">Подать анкету</button>
     <button class="btn" id="openNews">Новости</button>
-    <a href="https://more58-ai.github.io/vvixxi-house/video.html" class="btn">Видео</a>
   </header>
 
   <section class="content">
     <h2>О нас</h2>
     <p>
-      VVIXXI — это уютное комьюнити для всех любителей Roblox!<br><br>
-      ✅ Более 40+ активных участников онлайн ежедневно<br>
-      🎮 Ролевые игры, ивенты, квесты и конкурсы<br>
+      🚀 Atomic — это уютное комьюнити для всех любителей Roblox!<br><br>
+      🎮 Коллабы, ивенты, квесты и конкурсы<br>
       💬 Общение, поддержка и веселье 24/7<br>
       🏆 Топовые ивенты с наградами<br><br>
       Присоединяйся сейчас и стань частью нашей дружной семьи!
@@ -197,22 +205,21 @@
   </section>
 
   <footer>
-    © 2025 VVIXXI. Все права нихуя не защищены.
+    © 2025 Atomic. Все права не защищены 😎
   </footer>
 
   <!-- Modal Анкета -->
   <div class="modal" id="myModal">
     <div class="modal-content">
       <span class="close" id="closeModal">&times;</span>
-      <img src="https://i.postimg.cc/MZ0pdBcD/image.jpg" alt="VVIXXI">
+      <img src="https://i.postimg.cc/t42ng24N/image.jpg" alt="Atomic">
       <h2>Спасибо за интерес!</h2>
-      <p>
-        Мы рады, что ты хочешь стать частью <b>VVIXXI</b> 💖.<br><br>
+      <p>Мы рады, что ты хочешь стать частью <b>Atomic</b> 💖.<br><br>
         У нас ты найдешь ролевые игры, весёлые ивенты, дружное общение и крутую атмосферу.  
-        Просто заполни анкету — и присоединяйся к нашему сообществу! 🚀
+        Просто заполни анкету и присоединяйся! 🚀
       </p>
       <a href="https://docs.google.com/forms/d/e/1FAIpQLScvPUJ8ZraA68e0ArTTFUGk3z7qUb0VHD8WaRhXaomaPykaEQ/viewform" 
-         class="btn" id="formBtn">Подать анкету</a>
+         class="btn" id="formBtn">Заполнить анкету</a>
     </div>
   </div>
 
@@ -220,32 +227,29 @@
   <div class="modal" id="newsModal">
     <div class="modal-content">
       <span class="close" id="closeNews">&times;</span>
-      <h2>Новости VVIXXI</h2>
+      <h2>Новости Atomic</h2>
       <div class="news-container" id="newsBox">
         <div class="news-item active">🔥 Сегодня стартует новый ивент «Охота за сокровищами»!</div>
-        <div class="news-item">🎉 Добро пожаловать новым участникам! Мы уже 40+ человек!</div>
+        <div class="news-item">🎉 Добро пожаловать новым участникам! Мы уже 20+ человек!</div>
       </div>
       <p style="font-size:0.9rem;color:#999;margin-top:10px;">(Листай новости колесиком 🖱)</p>
     </div>
   </div>
 
   <script>
-    // Анкета
     const modal = document.getElementById("myModal");
-    document.getElementById("openModal").onclick = () => modal.style.display = "flex";
-    document.getElementById("closeModal").onclick = () => modal.style.display = "none";
-
-    // Новости
     const newsModal = document.getElementById("newsModal");
     const newsItems = document.querySelectorAll(".news-item");
     let newsIndex = 0;
+
+    document.getElementById("openModal").onclick = () => modal.style.display = "flex";
+    document.getElementById("closeModal").onclick = () => modal.style.display = "none";
+
     document.getElementById("openNews").onclick = () => newsModal.style.display = "flex";
     document.getElementById("closeNews").onclick = () => newsModal.style.display = "none";
 
     function showNews(index) {
-      newsItems.forEach((item, i) => {
-        item.classList.toggle("active", i === index);
-      });
+      newsItems.forEach((item, i) => item.classList.toggle("active", i === index));
     }
 
     document.getElementById("newsBox").addEventListener("wheel", (e) => {
@@ -255,18 +259,21 @@
       showNews(newsIndex);
     });
 
+    setInterval(() => {
+      newsIndex = (newsIndex + 1) % newsItems.length;
+      showNews(newsIndex);
+    }, 6000);
+
     window.onclick = (e) => {
       if (e.target == modal) modal.style.display = "none";
       if (e.target == newsModal) newsModal.style.display = "none";
     };
 
-    // Переход на Google Form с эффектом
     document.getElementById("formBtn").addEventListener("click", function(e) {
       e.preventDefault();
       document.body.classList.add("fade-out");
       setTimeout(() => window.location.href = this.href, 600);
     });
   </script>
-
 </body>
 </html>
