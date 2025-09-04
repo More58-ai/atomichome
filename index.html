@@ -19,7 +19,7 @@
 
     header {
       position: relative;
-      height: 300px; /* как было */
+      height: 300px;
       background: url('https://i.postimg.cc/t42ng24N/image.jpg') center/cover no-repeat;
       display: flex;
       flex-direction: column;
@@ -31,8 +31,7 @@
     header::before {
       content: "";
       position: absolute;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
+      inset: 0;
       background: rgba(0,0,0,0.55);
       backdrop-filter: blur(3px);
     }
@@ -45,12 +44,8 @@
       z-index: 2;
     }
     @keyframes glowPulse {
-      0%, 100% {
-        text-shadow: 0 0 10px #a855f7, 0 0 20px #a855f7, 0 0 40px #9333ea;
-      }
-      50% {
-        text-shadow: 0 0 20px #d8b4fe, 0 0 40px #a855f7, 0 0 60px #9333ea;
-      }
+      0%, 100% { text-shadow: 0 0 10px #a855f7, 0 0 20px #a855f7, 0 0 40px #9333ea; }
+      50% { text-shadow: 0 0 20px #d8b4fe, 0 0 40px #a855f7, 0 0 60px #9333ea; }
     }
 
     .btn {
@@ -73,7 +68,6 @@
       transform: translateY(-3px) scale(1.05);
       box-shadow: 0 0 25px rgba(255,255,255,0.9), 0 0 45px rgba(88,166,255,0.7);
     }
-
     @keyframes gradientShift {
       0% { background-position: 0% 50%; }
       50% { background-position: 100% 50%; }
@@ -86,15 +80,8 @@
       padding: 40px 20px;
       text-align: center;
     }
-    section.content h2 {
-      font-size: 2rem;
-      color: #58a6ff;
-      margin-bottom: 20px;
-    }
-    section.content p {
-      font-size: 1.2rem;
-      color: #c9d1d9;
-    }
+    section.content h2 { font-size: 2rem; color: #58a6ff; margin-bottom: 20px; }
+    section.content p { font-size: 1.2rem; color: #c9d1d9; }
 
     footer {
       background: #0c0f14;
@@ -116,7 +103,12 @@
       justify-content: center;
       align-items: center;
       z-index: 999;
+      opacity: 0;
+      transition: opacity 0.4s ease;
     }
+    .modal.show { display: flex; opacity: 1; }
+    .modal.hide { opacity: 0; pointer-events: none; }
+
     .modal-content {
       background: #161b22;
       border-radius: 20px;
@@ -128,24 +120,15 @@
       box-shadow: 0 0 40px rgba(88,166,255,0.5);
       transform: scale(0.9);
       opacity: 0;
-      animation: popUp 0.4s forwards;
+      transition: transform 0.4s ease, opacity 0.4s ease;
       position: relative;
     }
-    .modal-content img {
-      width: 120px;
-      border-radius: 50%;
-      margin-bottom: 20px;
-      box-shadow: 0 0 25px rgba(88,166,255,0.7);
-    }
+    .modal.show .modal-content { transform: scale(1); opacity: 1; }
     .modal-content h2 {
-      margin-bottom: 15px;
       font-size: 2rem;
-      color: #58a6ff;
-    }
-    .modal-content p {
       margin-bottom: 25px;
-      font-size: 1.1rem;
-      color: #c9d1d9;
+      color: #58a6ff;
+      text-shadow: 0 0 10px #58a6ff, 0 0 20px #9333ea;
     }
     .close {
       position: absolute;
@@ -158,30 +141,60 @@
     }
     .close:hover { color: #58a6ff; }
 
-    @keyframes popUp {
-      to { transform: scale(1); opacity: 1; }
-    }
-
+    /* Новости */
     .news-container {
-      max-height: 220px;
+      position: relative;
+      height: 60px;
       overflow: hidden;
-      display: flex;
-      justify-content: center;
-      align-items: center;
     }
     .news-item {
-      display: none;
-      font-size: 1.2rem;
-      color: #c9d1d9;
-      transition: opacity 0.3s;
+      position: absolute;
+      width: 100%;
+      opacity: 0;
+      transform: translateY(100%);
+      transition: all 0.6s ease;
     }
-    .news-item.active { display: block; opacity: 1; }
+    .news-item.active { opacity: 1; transform: translateY(0); }
+    .news-item.prev { opacity: 0; transform: translateY(-100%); }
+
+    /* Соцсети */
+    .social-links {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+    }
+    .social-card {
+      flex: 1;
+      min-width: 120px;
+      background: #1c2128;
+      border-radius: 15px;
+      padding: 20px;
+      text-decoration: none;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .social-card svg {
+      width: 40px;
+      height: 40px;
+      margin-bottom: 10px;
+    }
+    .social-card:hover {
+      transform: translateY(-5px) scale(1.05);
+      box-shadow: 0 0 20px rgba(255,255,255,0.3);
+    }
+    .social-card.tg { background: #0088cc; }
+    .social-card.tt { background: #000; }
 
     @media (max-width: 768px) {
       header h1 { font-size: 2rem; }
       .btn { font-size: 1rem; padding: 10px 18px; }
       section.content h2 { font-size: 1.5rem; }
       section.content p { font-size: 1rem; }
+      .modal-content { padding: 25px; }
+      .social-links { flex-direction: column; gap: 15px; }
     }
   </style>
 </head>
@@ -189,8 +202,9 @@
 
   <header>
     <h1>Atomic House</h1>
-    <button class="btn" id="openModal">Подать анкету</button>
+    <button class="btn" id="openForm">Подать анкету</button>
     <button class="btn" id="openNews">Новости</button>
+    <button class="btn" id="openSocial">Мы в соцсетях</button>
   </header>
 
   <section class="content">
@@ -209,71 +223,87 @@
   </footer>
 
   <!-- Modal Анкета -->
-  <div class="modal" id="myModal">
+  <div class="modal" id="formModal">
     <div class="modal-content">
-      <span class="close" id="closeModal">&times;</span>
-      <img src="https://i.postimg.cc/t42ng24N/image.jpg" alt="Atomic">
+      <span class="close" data-close="formModal">&times;</span>
       <h2>Спасибо за интерес!</h2>
       <p>Мы рады, что ты хочешь стать частью <b>Atomic</b> 💖.<br><br>
         У нас ты найдешь ролевые игры, весёлые ивенты, дружное общение и крутую атмосферу.  
         Просто заполни анкету и присоединяйся! 🚀
       </p>
       <a href="https://docs.google.com/forms/d/e/1FAIpQLScvPUJ8ZraA68e0ArTTFUGk3z7qUb0VHD8WaRhXaomaPykaEQ/viewform" 
-         class="btn" id="formBtn">Заполнить анкету</a>
+         class="btn" target="_blank">Заполнить анкету</a>
     </div>
   </div>
 
   <!-- Modal Новости -->
   <div class="modal" id="newsModal">
     <div class="modal-content">
-      <span class="close" id="closeNews">&times;</span>
-      <h2>Новости Atomic</h2>
-      <div class="news-container" id="newsBox">
-        <div class="news-item active">🔥 Сегодня стартует новый ивент «Охота за сокровищами»!</div>
-        <div class="news-item">🎉 Добро пожаловать новым участникам! Мы уже 20+ человек!</div>
+      <span class="close" data-close="newsModal">&times;</span>
+      <h2>Новости</h2>
+      <div class="news-container">
+        <div class="news-item active">🔥 Новый ивент стартует завтра!</div>
+        <div class="news-item">🎉 Добро пожаловать новым участникам!</div>
+        <div class="news-item">🚀 Обновление сайта уже доступно.</div>
       </div>
-      <p style="font-size:0.9rem;color:#999;margin-top:10px;">(Листай новости колесиком 🖱)</p>
+    </div>
+  </div>
+
+  <!-- Modal Соцсети -->
+  <div class="modal" id="socialModal">
+    <div class="modal-content">
+      <span class="close" data-close="socialModal">&times;</span>
+      <h2>Наши соцсети</h2>
+      <div class="social-links">
+        <a href="https://t.me/atomic_hom" class="social-card tg" target="_blank">
+          <svg viewBox="0 0 24 24" fill="white"><path d="M9.993 15.313l-.396 5.593c.566 0 .81-.242 1.1-.531l2.637-2.514 5.472 4.002c1.002.55 1.714.262 1.975-.927l3.587-16.836c.319-1.489-.54-2.07-1.521-1.71L1.6 9.495c-1.454.572-1.433 1.382-.248 1.75l5.936 1.853L18.92 5.64c.555-.348 1.062-.156.646.193"/></svg>
+          Telegram
+        </a>
+        <a href="https://www.tiktok.com/@moorechik_?is_from_webapp=1&sender_device=pc" class="social-card tt" target="_blank">
+          <svg viewBox="0 0 24 24" fill="white"><path d="M12 2c1.104 0 2 .896 2 2v14c0 2.209-1.791 4-4 4s-4-1.791-4-4c0-1.656 1.344-3 3-3 .354 0 .688.073 1 .184V4c0-1.104.896-2 2-2zm6 2c1.104 0 2 .896 2 2 0 2.209-1.791 4-4 4v8c0 2.209-1.791 4-4 4s-4-1.791-4-4h2c0 1.104.896-2 2-2s2-.896 2-2V6h2c0-1.104.896-2 2-2z"/></svg>
+          TikTok
+        </a>
+      </div>
     </div>
   </div>
 
   <script>
-    const modal = document.getElementById("myModal");
-    const newsModal = document.getElementById("newsModal");
-    const newsItems = document.querySelectorAll(".news-item");
-    let newsIndex = 0;
-
-    document.getElementById("openModal").onclick = () => modal.style.display = "flex";
-    document.getElementById("closeModal").onclick = () => modal.style.display = "none";
-
-    document.getElementById("openNews").onclick = () => newsModal.style.display = "flex";
-    document.getElementById("closeNews").onclick = () => newsModal.style.display = "none";
-
-    function showNews(index) {
-      newsItems.forEach((item, i) => item.classList.toggle("active", i === index));
+    function openModal(id) {
+      const m = document.getElementById(id);
+      m.classList.add("show");
+      m.classList.remove("hide");
+    }
+    function closeModal(id) {
+      const m = document.getElementById(id);
+      m.classList.add("hide");
+      setTimeout(() => m.classList.remove("show"), 400);
     }
 
-    document.getElementById("newsBox").addEventListener("wheel", (e) => {
-      newsIndex = e.deltaY > 0
-        ? (newsIndex + 1) % newsItems.length
-        : (newsIndex - 1 + newsItems.length) % newsItems.length;
-      showNews(newsIndex);
+    document.getElementById("openForm").onclick = () => openModal("formModal");
+    document.getElementById("openNews").onclick = () => openModal("newsModal");
+    document.getElementById("openSocial").onclick = () => openModal("socialModal");
+
+    document.querySelectorAll(".close").forEach(btn => {
+      btn.onclick = () => closeModal(btn.dataset.close);
     });
 
-    setInterval(() => {
-      newsIndex = (newsIndex + 1) % newsItems.length;
-      showNews(newsIndex);
-    }, 6000);
-
+    // Клик по фону
     window.onclick = (e) => {
-      if (e.target == modal) modal.style.display = "none";
-      if (e.target == newsModal) newsModal.style.display = "none";
+      document.querySelectorAll(".modal.show").forEach(m => {
+        if (e.target === m) closeModal(m.id);
+      });
     };
 
-    document.getElementById("formBtn").addEventListener("click", function(e) {
-      e.preventDefault();
-      document.body.classList.add("fade-out");
-      setTimeout(() => window.location.href = this.href, 600);
-    });
+    // Автопрокрутка новостей
+    let newsIndex = 0;
+    const newsItems = document.querySelectorAll(".news-item");
+    setInterval(() => {
+      newsItems[newsIndex].classList.remove("active");
+      newsItems[newsIndex].classList.add("prev");
+      newsIndex = (newsIndex + 1) % newsItems.length;
+      newsItems[newsIndex].classList.add("active");
+      setTimeout(() => newsItems.forEach(n => n.classList.remove("prev")), 600);
+    }, 3000);
   </script>
 </body>
 </html>
